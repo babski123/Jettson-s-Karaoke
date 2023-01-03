@@ -1,3 +1,3 @@
 # Jettson's Karaoke
 
-A web based karaoke built using Youtube's API
+A Web-Based Karaoke built using Youtube's API Services
