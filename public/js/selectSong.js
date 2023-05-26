@@ -33,7 +33,7 @@
                 if (data.items.length > 0) {
                     for (let i = 0; i < data.items.length; i++) {
                         let thumbNail = data.items[i].snippet.thumbnails.default;
-                        resHtml += "<a href='select/reserve/" + data.items[i].id.videoId + "/" + data.items[i].snippet.title.toUpperCase() + "'><img src='" + thumbNail.url + "'> " + data.items[i].snippet.title + "</a>";
+                        resHtml += "<a href='javascript:void(0)' onclick='JKGlobals.reserveSong(\"" + data.items[i].id.videoId + "\", \"" + data.items[i].snippet.title.toUpperCase() + "\")'><img src='" + thumbNail.url + "'> " + data.items[i].snippet.title + "</a>";
                         resHtml += "<hr/>";
                     }
                 } else {

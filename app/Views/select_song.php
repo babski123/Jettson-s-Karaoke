@@ -15,16 +15,11 @@
   <link rel="stylesheet" href="<?= base_url() ?>/public/css/toastr.min.css">
 
   <!-- HEADER SCRIPTS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="<?= base_url() ?>/public/js/toastr.min.js"></script>
-  <script>
-    //Global Javascript Variables
-    var JKGlobals = {
-      baseURL: "<?= base_url() ?>"
-    }
-  </script>
+  <?php include("includes/JKGlobals.php"); ?>
   <style>
     body {
       background: #1a1a1a;
@@ -70,6 +65,25 @@
 </head>
 
 <body>
+  <!-- Modal -->
+  <div class="modal fade" id="addSongModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addSongModalTitle">Reserve A Song</h5>
+          <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button> -->
+        </div>
+        <div class="modal-body" id="addSongModalContent">
+        </div>
+        <div class="modal-footer">
+          <button id="addSongModalConfirmBtn" disabled type="button" class="btn btn-primary" data-dismiss="modal">Okay</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="container mt-2">
     <div class="row justify-content-center">
       <div class="col-lg-6 col-md-8 col-sm-10">

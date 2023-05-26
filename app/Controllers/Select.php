@@ -10,6 +10,7 @@ namespace App\Controllers;
 
 use CodeIgniter\API\ResponseTrait;
 use App\Controllers\BaseController;
+use App\Models\Songs;
 
 class Select extends BaseController
 {
@@ -33,12 +34,32 @@ class Select extends BaseController
             return redirect()->to(base_url());
         } else {
             //add song to the queue
+
+            //load the Songs model
+            $model = new Songs();
             $data = [
-                'video_id' => $video_id,
-                'title' => $title
+                'title' => $title,
+                'vid' => $video_id
             ];
 
-            return $this->respond($data);
+            //insert the song to db
+            $result = $model->insert($data);
+
+            if ($result) {
+                $response = [
+                    'status' => 'success',
+                    'song_detail' => $data
+                ];
+
+                return $this->respondCreated($response);
+            } else {
+                $response = [
+                    'status' => 'failure',
+                    'song_detail' => $data
+                ];
+
+                return $this->fail($response);
+            }
         }
     }
 }
