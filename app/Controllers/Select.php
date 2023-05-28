@@ -62,4 +62,25 @@ class Select extends BaseController
             }
         }
     }
+
+    public function reservations()
+    {
+        if (!$this->session->get('logged_in')) {
+            //if not logged in, redirect to home page
+            return redirect()->to(base_url());
+        }else{
+            //return the reserved songs via SEE
+
+            //set headers
+            $this->response->setHeader('Content-Type', 'text/event-stream')
+            ->setHeader('Cache-Control', 'no-cache')
+            ->setHeader('Connection', 'keep-alive');
+
+            $model = new Songs();
+            $response = $model->findAll();
+
+            //send initial response
+            echo "data: " . json_encode($response) . "\n\n";
+        }
+    }
 }

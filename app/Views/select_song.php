@@ -2,27 +2,17 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <title><?= config("Settings")->websiteName; ?></title>
-  <meta name="description" content="A web-based Karaoke built using the Youtube API Services">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" type="image/png" href="public/favicon.ico" />
-
-  <!-- STYLES -->
-  <link rel="stylesheet" href="<?= base_url() ?>/public/css/bootstrap4.3.1.css">
-  <link rel="stylesheet" href="<?= base_url() ?>/public/css/main.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-  <link rel="stylesheet" href="<?= base_url() ?>/public/css/toastr.min.css">
-
-  <!-- HEADER SCRIPTS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  <script src="<?= base_url() ?>/public/js/toastr.min.js"></script>
-  <?php include("includes/JKGlobals.php"); ?>
+  <?php
+  include("includes/headers.php");
+  include("includes/JKGlobals.js.php");
+  ?>
+  <script>
+    //start streaming reserved songs
+    JKGlobals.getReservedSongs();
+  </script>
   <style>
     body {
-      background: #1a1a1a;
+      background: #501c0e;
     }
 
     .remote {
@@ -70,7 +60,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="addSongModalTitle">Reserve A Song</h5>
+          <h5 class="modal-title" id="addSongModalTitle">Reserve a Song</h5>
           <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button> -->
@@ -94,17 +84,28 @@
           <button class="button">Play</button>
           <button class="button">Pause</button>
           <button class="button">Next</button>
-
+          <br>
+          <a href="<?= base_url() ?>/privacy">Privacy Policy</a>
           <div class="search-container my-3 mx-2">
             <input id="search" type="text" class="search-input" placeholder="Find a song">
             <button id="find" class="button">Go</button>
           </div>
-        </div>
-
-        <div id="results" class="remote jk-hidden mt-2">
+          <ul class="nav nav-tabs" id="navigation-tabs" role="tablist">
+            <li class="nav-item">
+              <a class="text-reset nav-link active" id="results-tab" data-toggle="tab" href="#results" role="tab" aria-controls="results" aria-selected="true">Search Results</a>
+            </li>
+            <li class="nav-item">
+              <a class="text-reset nav-link" id="reservedSongs-tab" data-toggle="tab" href="#reservedSongs" role="tab" aria-controls="reservedSongs" aria-selected="false">Reserved Songs</a>
+            </li>
+          </ul>
+          <div class="tab-content mt-3" id="navigation-tabs-content">
+            <div class="tab-pane fade text-left show active" id="results" role="tabpanel" aria-labelledby="results-tab"></div>
+            <div class="tab-pane fade text-left" id="reservedSongs" role="tabpanel" aria-labelledby="reservedSongs-tab"></div>
+          </div>
         </div>
       </div>
     </div>
+  </div>
   </div>
   <script src="<?= base_url() ?>/public/js/selectSong.js"></script>
 </body>

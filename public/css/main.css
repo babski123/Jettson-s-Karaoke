@@ -25,3 +25,8 @@
 .jk-hidden {
     display: none;
 }
+
+.jk-main-container {
+    background: #fff;
+    padding: 20px 40px;
+}

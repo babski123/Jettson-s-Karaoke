@@ -21,7 +21,8 @@
                 $("#search")[0].disabled = true;
             },
             success: function (data) {
-                $("#results")[0].classList.remove("jk-hidden");
+                //switch to the results tab each time a song search is happening
+                $("#results-tab").tab('show');
                 let resHtml = "";
                 $("#find").html("Go");
                 $("#find")[0].disabled = false;
