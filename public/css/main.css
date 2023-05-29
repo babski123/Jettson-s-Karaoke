@@ -30,3 +30,14 @@
     background: #fff;
     padding: 20px 40px;
 }
+
+.reserved-song {
+    padding: 10px;
+    background-color: beige;
+}
+
+.removed-song {
+    padding: 10px;
+    background-color: none;
+    color: #dadada;
+}

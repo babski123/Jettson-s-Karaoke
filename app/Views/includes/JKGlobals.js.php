@@ -7,7 +7,7 @@
  */
 ?>
 <script>
-    //Global Javascript Variables
+    //Global Javascript Variables and Methods
     var JKGlobals = {
 
         baseURL: "<?= base_url() ?>",
@@ -50,11 +50,35 @@
                 }
                 html += "<ol>";
                 for (let i = 0; i < songs.length; i++) {
-                    html += "<li class='my-2'>" + songs[i].title + "</li>";
+                    html += "<li class='my-2 reserved-song song-" + songs[i].id + "'>" + songs[i].title + "<br><a class='badge badge-primary' href='javascript:void(0)'>PRIORITIZE</a>  <a class='badge badge-danger' href='javascript:void(0)' onclick='JKGlobals.deleteSong(" + songs[i].id + ")'>REMOVE</a></li>";
                 }
                 html += "</ol>"
                 $("#reservedSongs").html(html);
             }
+        },
+
+        //delete an individual song
+        deleteSong: function(songID) {
+            document.querySelector(".song-" + songID).classList.remove('reserved-song');
+            document.querySelector(".song-" + songID).classList.add('removed-song');
+            //run API call to delete the song
+            $.ajax({
+                url: "<?= base_url() ?>/select/delete/" + songID,
+                success: function(data) {
+                    if (data.status == "success") {
+                        toastr.success("Song has been removed!");
+                    } else {
+                        toastr.error("Failed to remove song.");
+                        document.querySelector(".song-" + songID).classList.add('reserved-song');
+                        document.querySelector(".song-" + songID).classList.remove('removed-song');
+                    }
+                },
+                error: function() {
+                    toastr.error("Failed to remove song.");
+                    document.querySelector(".song-" + songID).classList.add('reserved-song');
+                    document.querySelector(".song-" + songID).classList.remove('removed-song');
+                }
+            });
         },
 
         //show the delete confirmation modal

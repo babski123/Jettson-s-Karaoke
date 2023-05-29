@@ -124,4 +124,35 @@ class Select extends BaseController
             }
         }
     }
+
+    /**
+     * Handles the deletion of an individual song from the queue
+     * based on song id
+     */
+    public function delete($song_id)
+    {
+        if (!$this->session->get('logged_in')) {
+            //if not logged in, redirect to home page
+            return redirect()->to(base_url());
+        } else {
+            //load the Songs model
+            $model = new Songs();
+
+            //delete the song
+            $result = $model->where('id', $song_id)->delete();
+
+            if ($result) {
+                $response = [
+                    'status' => 'success',
+                    'deleted_id' => $song_id
+                ];
+                return $this->respondDeleted($response);
+            } else {
+                $response = [
+                    'status' => 'failure'
+                ];
+                return $this->fail($response);
+            }
+        }
+    }
 }

@@ -1,3 +1,7 @@
+/**
+ * This script handles the functionality of searching
+ * karaoke songs in Youtube using their API
+ */
 (function () {
     $("#find").click(function () {
         $.ajax({
@@ -23,6 +27,7 @@
             success: function (data) {
                 //switch to the results tab each time a song search is happening
                 $("#results-tab").tab('show');
+                
                 let resHtml = "";
                 $("#find").html("Go");
                 $("#find")[0].disabled = false;
