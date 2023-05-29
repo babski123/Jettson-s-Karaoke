@@ -9,5 +9,5 @@ class Songs extends Model
     protected $DBGroup          = 'default';
     protected $table            = 'songs';
     protected $primaryKey       = 'id';
-    protected $allowedFields = ['title', 'vid'];
+    protected $allowedFields = ['title', 'vid', 'access_name'];
 }

@@ -39,7 +39,8 @@ class Select extends BaseController
             $model = new Songs();
             $data = [
                 'title' => $title,
-                'vid' => $video_id
+                'vid' => $video_id,
+                'access_name' => $this->session->get('access_name')
             ];
 
             //insert the song to db
@@ -77,7 +78,7 @@ class Select extends BaseController
             ->setHeader('Connection', 'keep-alive');
 
             $model = new Songs();
-            $response = $model->findAll();
+            $response = $model->where('access_name', $this->session->get('access_name'))->findAll();
 
             //send initial response
             echo "data: " . json_encode($response) . "\n\n";
