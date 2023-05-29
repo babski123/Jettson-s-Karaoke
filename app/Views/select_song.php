@@ -9,6 +9,7 @@
   <script>
     //start streaming reserved songs
     JKGlobals.getReservedSongs();
+
   </script>
   <style>
     body {
@@ -55,8 +56,8 @@
 </head>
 
 <body>
-  <!-- Modal -->
-  <div class="modal fade" id="addSongModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <!-- Add Song Modal -->
+  <div class="modal fade" id="addSongModal" tabindex="-1" role="dialog" aria-labelledby="addSongModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -73,6 +74,28 @@
       </div>
     </div>
   </div>
+  <!-- Add Song Modal End -->
+
+  <!-- Delete All Songs Modal -->
+  <div class="modal fade" id="deleteReservedSongsModal" tabindex="-1" role="dialog" aria-labelledby="deleteReservedSongsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteReservedSongsModalTitle">Clear the Queue</h5>
+          <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button> -->
+        </div>
+        <div class="modal-body" id="deleteReservedSongsModalContent">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="JKGlobals.deleteReservedSongsConfirm()">Proceed</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Delete All Songs Modal End -->
 
   <div class="container mt-2">
     <div class="row justify-content-center">
