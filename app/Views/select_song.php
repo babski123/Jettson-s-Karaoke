@@ -106,7 +106,7 @@
           <button class="button">Stop</button>
           <button class="button">Play</button>
           <button class="button">Pause</button>
-          <button class="button">Next</button>
+          <button class="button" onclick="JKGlobals.nextVideo()">Next</button>
           <br>
           <a href="<?= base_url() ?>/privacy">Privacy Policy</a>
           <div class="search-container my-3 mx-2">

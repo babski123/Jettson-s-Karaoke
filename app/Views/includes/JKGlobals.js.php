@@ -12,7 +12,15 @@
 
         baseURL: "<?= base_url() ?>",
 
-        //reserve a song
+
+        /**
+         * REMOTE CONTROLLER OBJECTS AND METHODS
+         * 
+         * The methods in this section should be used in the remote controller only.
+         * Specifically, the select_song.php file
+         */
+
+        //reserve a song via remote controller
         reserveSong: function(vid, title) {
             $("#addSongModalContent").html("<strong>" + title + "</strong> is being added to the queue. Please wait...");
             $("#addSongModalConfirmBtn")[0].disabled = true;
@@ -38,7 +46,7 @@
             });
         },
 
-        //display reserved songs
+        //display reserved songs in the remote controller
         getReservedSongs: function() {
             const eventSource = new EventSource('<?= base_url() ?>/select/reservations');
 
@@ -50,14 +58,17 @@
                 }
                 html += "<ol>";
                 for (let i = 0; i < songs.length; i++) {
-                    html += "<li class='my-2 reserved-song song-" + songs[i].id + "'>" + songs[i].title + "<br><a class='badge badge-primary' href='javascript:void(0)'>PRIORITIZE</a>  <a class='badge badge-danger' href='javascript:void(0)' onclick='JKGlobals.deleteSong(" + songs[i].id + ")'>REMOVE</a></li>";
+                    html += "<li class='my-2 reserved-song song-" + songs[i].id + "'>" + songs[i].title + "<br>";
+                    if (i != 0) {
+                        html += "<a class='badge badge-primary' href='javascript:void(0)'>PRIORITIZE</a>  <a class='badge badge-danger' href='javascript:void(0)' onclick='JKGlobals.deleteSong(" + songs[i].id + ")'>REMOVE</a></li>";
+                    }
                 }
                 html += "</ol>"
                 $("#reservedSongs").html(html);
             }
         },
 
-        //delete an individual song
+        //delete an individual song from the remote controller
         deleteSong: function(songID) {
             document.querySelector(".song-" + songID).classList.remove('reserved-song');
             document.querySelector(".song-" + songID).classList.add('removed-song');
@@ -81,7 +92,7 @@
             });
         },
 
-        //show the delete confirmation modal
+        //show the delete confirmation modal in the remote controller
         deleteReservedSongs: function() {
             $("#deleteReservedSongsModalContent").html("Are you sure to delete all reserved songs?");
             $("#deleteReservedSongsModal").modal({
@@ -89,7 +100,7 @@
             });
         },
 
-        //handle the deletion of songs
+        //handle the deletion of songs in the remote controller
         deleteReservedSongsConfirm: function() {
 
             //disable the buttons to avoid duplicate actions
@@ -124,6 +135,16 @@
             });
         },
 
+        /**
+         * END REMOTE CONTROLLER OBJECTS AND METHODS
+         */
+
+        /** ----------------------------------------------------------------------------------------------------------------------------------------------- */
+
+        /**
+         * SPEECH SYNTHESIS OBJECTS AND METHODS
+         */
+
         //Speech Synthesis Instance
         speech: new SpeechSynthesisUtterance(),
 
@@ -136,6 +157,18 @@
             window.speechSynthesis.speak(this.speech);
         },
 
+        /**
+         * END SPEECH SYNTHESIS OBJECTS AND METHODS
+         */
+
+        /** ----------------------------------------------------------------------------------------------------------------------------------------------- */
+
+        /**
+         * VIDEO PLAYER OBJECTS AND METHODS
+         * The methods in this section should be used only in the Video Player.
+         * Specifically, video_player.php
+         */
+
         //The youtube player instance
         player: {},
         //The reserved songs array
@@ -143,13 +176,60 @@
 
         //Hide the splash screen
         hideSplash: function() {
-            $("#video-container").fadeToggle();
-            $("#jk-title-container").fadeToggle();
+            $("#video-container").fadeOut();
+            $("#jk-title-container").fadeOut();
+        },
+
+        //Show the splash screen
+        showSplash: function() {
+            $("#video-container").fadeIn();
+            $("#jk-title-container").fadeIn();
         },
 
         //This method handles the functionality of moving to the next song
         nextVideo: function() {
-            
+            //stop the currently playing song
+            this.player.stopVideo();
+            //if there are more than 1 song in the queue
+            if (this.reservedSongs.length > 1) {
+                //load the video ID of the next song
+                this.player.loadVideoById(this.reservedSongs[1].vid);
+                //play the song
+                this.player.playVideo();
+            }
+            //remove the first song from database
+            this.removeSong(this.reservedSongs[0].id);
+            //remove the first song
+            this.reservedSongs.shift();
+        },
+
+        //This method handles the functionaity of playing the queue
+        startQueue: function() {
+            //if there are songs in the queue, play the first one and hide the splash screen
+            if (this.reservedSongs.length > 0) {
+                //load the video id of the first song
+                this.player.loadVideoById(this.reservedSongs[0].vid);
+                //play the song
+                this.player.playVideo();
+                //hide splash screen
+                this.hideSplash();
+            }
+        },
+
+        //this method handles the deletion of a song from the database via the video player
+        removeSong: function(songID) {
+            //run API call to delete the song
+            $.ajax({
+                url: "<?= base_url() ?>/select/delete/" + songID,
+                success: function(data) {
+                    console.log(data);
+                },
+                error: function(e1, e2, e3) {
+                    console.log(e1);
+                    console.log(e2);
+                    console.log(e3);
+                }
+            });
         },
 
         //This method is called once the youtube iFrame API has been loaded
@@ -182,13 +262,7 @@
                 success: function(data) {
                     //store the song list in our global object
                     JKGlobals.reservedSongs = data;
-
-                    //if there are songs in the queue, play the first one and hide the splash screen
-                    if(data.length>0) {
-                        JKGlobals.player.loadVideoById(data[0].vid);
-                        JKGlobals.player.playVideo();
-                        JKGlobals.hideSplash();
-                    }
+                    JKGlobals.startQueue();
                 }
             });
         },
@@ -197,6 +271,10 @@
         onPlayerStateChange: function(event) {
             console.log('Playter state change');
         }
+
+        /**
+         * END VIDEO PLAYER OBJECTS AND METHODS
+         */
 
     }
 </script>
