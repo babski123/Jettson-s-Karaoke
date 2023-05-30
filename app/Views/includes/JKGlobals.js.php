@@ -122,6 +122,80 @@
                     btns[1].innerHTML = "Proceed";
                 }
             });
+        },
+
+        //Speech Synthesis Instance
+        speech: new SpeechSynthesisUtterance(),
+
+        //This method handles the speaking
+        speak: function(text) {
+            this.speech.volume = 1; // Volume (0.0 to 1.0)
+            this.speech.rate = 1; // Speaking rate (0.1 to 10)
+            this.speech.pitch = 1; // Pitch (0 to 2)
+            this.speech.text = text;
+            window.speechSynthesis.speak(this.speech);
+        },
+
+        //The youtube player instance
+        player: {},
+        //The reserved songs array
+        reservedSongs: [],
+
+        //Hide the splash screen
+        hideSplash: function() {
+            $("#video-container").fadeToggle();
+            $("#jk-title-container").fadeToggle();
+        },
+
+        //This method handles the functionality of moving to the next song
+        nextVideo: function() {
+            
+        },
+
+        //This method is called once the youtube iFrame API has been loaded
+        onYouTubeIframeAPIReady: function() {
+
+            this.speak('Welcome to Jettson\'s Karaoke');
+
+            this.player = new YT.Player('youtube-player', {
+                height: window.innerHeight - (window.innerHeight * 0.01),
+                width: window.innerWidth - (window.innerHeight * 0.01),
+                //height: window.innerHeight,
+                //width: window.innerWidth,
+                playerVars: {
+                    "enablejsapi": 1,
+                    "origin": "https://www.youtube.com"
+                },
+                events: {
+                    'onReady': this.onPlayerReady,
+                    'onStateChange': this.onPlayerStateChange
+                }
+            });
+        },
+
+        //This method is executed once the youtube player is ready
+        onPlayerReady: function(event) {
+            JKGlobals.speak('The Karaoke Player is now ready');
+            //When the player is ready, pull the reserved songs
+            $.ajax({
+                url: "<?= base_url() ?>/select/songs",
+                success: function(data) {
+                    //store the song list in our global object
+                    JKGlobals.reservedSongs = data;
+
+                    //if there are songs in the queue, play the first one and hide the splash screen
+                    if(data.length>0) {
+                        JKGlobals.player.loadVideoById(data[0].vid);
+                        JKGlobals.player.playVideo();
+                        JKGlobals.hideSplash();
+                    }
+                }
+            });
+        },
+
+        //This method is executed once the player state changes (paused, stop, play, etc.)
+        onPlayerStateChange: function(event) {
+            console.log('Playter state change');
         }
 
     }

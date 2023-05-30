@@ -96,6 +96,29 @@ class Select extends BaseController
     }
 
     /**
+     * Returns the list of reserved songs as a pure JSON data
+     */
+    public function songs()
+    {
+        if (!$this->session->get('logged_in')) {
+            //if not logged in, redirect to home page
+            return redirect()->to(base_url());
+        } else {
+            //return the reserved songs via SEE
+
+            //set headers
+            $this->response->setHeader('Content-Type', 'text/event-stream')
+                ->setHeader('Cache-Control', 'no-cache')
+                ->setHeader('Connection', 'keep-alive');
+
+            $model = new Songs();
+            $response = $model->where('access_name', $this->session->get('access_name'))->findAll();
+
+            return $this->respondCreated($response);
+        }
+    }
+
+    /**
      * Handles the deletion of all songs in the queue
      * of the currently logged-in user
      */

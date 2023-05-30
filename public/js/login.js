@@ -32,7 +32,7 @@
                         window.location.href = JKGlobals.baseURL + '/select';
                     } else {
                         //if not, redirect to the videoke player
-                        window.location.href = JKGlobals.baseURL + '/videoke';
+                        window.location.href = JKGlobals.baseURL + '/player';
                     }
                 } else {
                     toastr.error('Access code invalid. Please contact IT to get valid access code.');
