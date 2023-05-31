@@ -13,6 +13,8 @@
   <style>
     body {
       background: #501c0e;
+      background-image: url('<?= base_url() ?>public/images/index_bg.jpg');
+      background-repeat: no-repeat;
     }
 
     .remote {

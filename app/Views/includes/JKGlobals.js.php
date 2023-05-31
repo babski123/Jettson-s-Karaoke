@@ -48,10 +48,16 @@
 
         //display reserved songs in the remote controller
         getReservedSongs: function() {
-            const eventSource = new EventSource('<?= base_url() ?>select/reservations');
 
-            eventSource.onmessage = function(event) {
-                let songs = JSON.parse(event.data);
+            <?php if (env('CI_ENVIRONMENT') == 'development') : ?>
+                // Enable pusher logging - don't include this in production
+                Pusher.logToConsole = true;
+            <?php endif; ?>
+
+            let channel = JKGlobals.pusher.subscribe('songs-channel');
+            channel.bind('songs-update', function(data) {
+                //store the songs locally
+                let songs = data.songs;
                 let html = "<h5 class='text-center mb-2'>Songs in queue: " + songs.length + "</h5>";
                 if (songs.length > 1) {
                     html += "<div class='text-center'><a href='javascript:void(0)' onclick='JKGlobals.deleteReservedSongs()'>Clear Queue</a></div>";
@@ -65,7 +71,18 @@
                 }
                 html += "</ol>"
                 $("#reservedSongs").html(html);
-            }
+            });
+
+            //send the reserved songs to pusher via ajax
+            $.ajax({
+                url: "<?= base_url() ?>select/songs", //this endpoint retrieves the reserved songs from DB and sends it to pusher
+                success: function(data) {
+
+                    if (data.status == "success") {
+
+                    }
+                }
+            });
         },
 
         //delete an individual song from the remote controller
@@ -196,6 +213,8 @@
         player: {},
         //The reserved songs array
         reservedSongs: [],
+        //the Karaoke's status
+        isStarted: false,
 
         //Hide the splash screen
         hideSplash: function() {
@@ -290,8 +309,15 @@
             channel.bind('songs-update', function(data) {
                 //store the songs locally
                 let songs = data.songs;
-                JKGlobals.reservedSongs = songs;
-                JKGlobals.startQueue();
+                JKGlobals.reservedSongs = songs; //this line syncs the songs list from DB and to our client
+                if(JKGlobals.isStarted == false) {
+                    JKGlobals.startQueue();
+                    JKGlobals.isStarted = true;
+                }
+
+                if(songs.length == 0) {
+                    JKGlobals.isStarted = false;
+                }
             });
 
             //send the reserved songs to pusher via ajax
@@ -302,9 +328,6 @@
                     if (data.status == "success") {
 
                     }
-                    //store the song list in our global object
-                    //JKGlobals.reservedSongs = data;
-                    //JKGlobals.startQueue();
                 }
             });
         },

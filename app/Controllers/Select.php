@@ -72,7 +72,7 @@ class Select extends BaseController
         }
     }
 
-    /**
+    /** DEPRECATED
      * Returns the list of reserved songs as a JSON data
      * via Server Sent Events
      */
@@ -131,6 +131,7 @@ class Select extends BaseController
 
             //delete the reserved songs
             $result = $model->where('access_name', $this->session->get('access_name'))->delete();
+            $this->_send_songs_to_pusher();
 
             if ($result) {
                 $response = [
@@ -162,6 +163,7 @@ class Select extends BaseController
 
             //delete the song
             $result = $model->where('id', $song_id)->delete();
+            $this->_send_songs_to_pusher();
 
             if ($result) {
                 $response = [
