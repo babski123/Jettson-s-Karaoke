@@ -15,7 +15,6 @@ use App\Models\Songs;
 class Select extends BaseController
 {
     use ResponseTrait;
-
     /**
      * Displays the song selection UI
      */
@@ -51,6 +50,9 @@ class Select extends BaseController
 
             //insert the song to db
             $result = $model->insert($data);
+
+            //send updated list to pusher
+            $this->_send_songs_to_pusher();
 
             if ($result) {
                 $response = [
@@ -96,7 +98,7 @@ class Select extends BaseController
     }
 
     /**
-     * Returns the list of reserved songs as a pure JSON data
+     * This method will send the reserved songs to our Pusher songs-channel
      */
     public function songs()
     {
@@ -104,17 +106,13 @@ class Select extends BaseController
             //if not logged in, redirect to home page
             return redirect()->to(base_url());
         } else {
-            //return the reserved songs via SEE
+            
+            $response = $this->_send_songs_to_pusher();
 
-            //set headers
-            $this->response->setHeader('Content-Type', 'text/event-stream')
-                ->setHeader('Cache-Control', 'no-cache')
-                ->setHeader('Connection', 'keep-alive');
-
-            $model = new Songs();
-            $response = $model->where('access_name', $this->session->get('access_name'))->findAll();
-
-            return $this->respondCreated($response);
+            return $this->respond([
+                "status" => "success",
+                "songs" => $response
+            ]);
         }
     }
 
@@ -158,6 +156,7 @@ class Select extends BaseController
             //if not logged in, redirect to home page
             return redirect()->to(base_url());
         } else {
+
             //load the Songs model
             $model = new Songs();
 
@@ -177,5 +176,28 @@ class Select extends BaseController
                 return $this->fail($response);
             }
         }
+    }
+
+    /**
+     * Use this method to send the reserved songs to pusher
+     * Returns the list of songs
+     */
+    protected function _send_songs_to_pusher()
+    {
+        //load the pusher helper
+        helper('pusher');
+
+        //create the pusher instance
+        $pusher = pusher_create();
+
+        //retrieve the list of reserved songs
+        $model = new Songs();
+        $response = $model->where('access_name', $this->session->get('access_name'))->findAll();
+
+        //send the list to pusher
+        $data['songs'] = $response;
+        $pusher->trigger('songs-channel', 'songs-update', $data);
+
+        return $response;
     }
 }

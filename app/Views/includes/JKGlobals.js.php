@@ -280,29 +280,52 @@
         onPlayerReady: function(event) {
 
             JKGlobals.speak('The Karaoke Player is now ready');
-            //When the player is ready, pull the reserved songs
+            //When the player is ready, start listening to the songs-channel in pusher
+            <?php if (env('CI_ENVIRONMENT') == 'development') : ?>
+                // Enable pusher logging - don't include this in production
+                Pusher.logToConsole = true;
+            <?php endif; ?>
+
+            let channel = JKGlobals.pusher.subscribe('songs-channel');
+            channel.bind('songs-update', function(data) {
+                //store the songs locally
+                let songs = data.songs;
+                JKGlobals.reservedSongs = songs;
+                JKGlobals.startQueue();
+            });
+
+            //send the reserved songs to pusher via ajax
             $.ajax({
-                url: "<?= base_url() ?>select/songs",
+                url: "<?= base_url() ?>select/songs", //this endpoint retrieves the reserved songs from DB and sends it to pusher
                 success: function(data) {
+
+                    if (data.status == "success") {
+
+                    }
                     //store the song list in our global object
-                    JKGlobals.reservedSongs = data;
-                    JKGlobals.startQueue();
+                    //JKGlobals.reservedSongs = data;
+                    //JKGlobals.startQueue();
                 }
             });
         },
 
         //This method is executed once the player state changes (paused, stop, play, etc.)
         onPlayerStateChange: function(event) {
-            console.log('Playter state change');
+            if (event.data === 0) {
+                JKGlobals.nextVideo();
+            }
+            console.log("Player Status: " + event.data);
         },
 
         //This method subscribes the browser to our Pusher command-channel
-        commandListener() {
+        commandListener: function() {
 
-            // Enable pusher logging - don't include this in production
-            Pusher.logToConsole = true;
+            <?php if (env('CI_ENVIRONMENT') == 'development') : ?>
+                // Enable pusher logging - don't include this in production
+                Pusher.logToConsole = true;
+            <?php endif; ?>
 
-            let channel = this.pusher.subscribe('command-channel');
+            let channel = JKGlobals.pusher.subscribe('command-channel');
             channel.bind('command-update', function(data) {
                 let cmd = data.command;
 
@@ -331,7 +354,7 @@
         /** ----------------------------------------------------------------------------------------------------------------------------------------------- */
 
         /**
-         * PUSHER INSTANCE
+         * PUSHER INSTANCE Client API
          * Visit www.pusher.com for more details
          */
         pusher: new Pusher('<?= env('PUSHER_APP_KEY'); ?>', {
