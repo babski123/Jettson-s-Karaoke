@@ -108,7 +108,7 @@
           <button class="button">Pause</button>
           <button class="button" onclick="JKGlobals.nextVideo()">Next</button>
           <br>
-          <a href="<?= base_url() ?>/privacy">Privacy Policy</a>
+          <a href="<?= base_url() ?>privacy">Privacy Policy</a>
           <div class="search-container my-3 mx-2">
             <input id="search" type="text" class="search-input" placeholder="Find a song">
             <button id="find" class="button">Go</button>
@@ -130,7 +130,7 @@
     </div>
   </div>
   </div>
-  <script src="<?= base_url() ?>/public/js/selectSong.js"></script>
+  <script src="<?= base_url() ?>public/js/selectSong.js"></script>
 </body>
 
 </html>

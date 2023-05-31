@@ -10,6 +10,7 @@
         body {
             background-color: #000;
         }
+
         #video-container {
             position: fixed;
             top: 0;
@@ -63,7 +64,7 @@
 <body>
     <div id="video-container">
         <video id="video-player" autoplay loop muted>
-            <source src="<?= base_url() ?>/public/videos/background_video.mp4" type="video/mp4">
+            <source src="<?= base_url() ?>public/videos/background_video.mp4" type="video/mp4">
         </video>
     </div>
 

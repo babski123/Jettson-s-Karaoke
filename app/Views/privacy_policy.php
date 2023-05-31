@@ -8,7 +8,7 @@
     ?>
     <style>
         body {
-            background-image: url('<?= base_url() ?>/public/images/index_bg.jpg');
+            background-image: url('<?= base_url() ?>public/images/index_bg.jpg');
             background-repeat: no-repeat;
             background-size: cover;
         }

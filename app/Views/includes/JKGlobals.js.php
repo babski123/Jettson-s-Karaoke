@@ -48,7 +48,7 @@
 
         //display reserved songs in the remote controller
         getReservedSongs: function() {
-            const eventSource = new EventSource('<?= base_url() ?>/select/reservations');
+            const eventSource = new EventSource('<?= base_url() ?>select/reservations');
 
             eventSource.onmessage = function(event) {
                 let songs = JSON.parse(event.data);
@@ -74,7 +74,7 @@
             document.querySelector(".song-" + songID).classList.add('removed-song');
             //run API call to delete the song
             $.ajax({
-                url: "<?= base_url() ?>/select/delete/" + songID,
+                url: "<?= base_url() ?>select/delete/" + songID,
                 success: function(data) {
                     if (data.status == "success") {
                         toastr.success("Song has been removed!");
@@ -111,7 +111,7 @@
 
             //run API call to delete all songs
             $.ajax({
-                url: "<?= base_url() ?>/select/clear",
+                url: "<?= base_url() ?>select/clear",
                 success: function(data) {
                     if (data.status == "success") {
                         $("#deleteReservedSongsModalContent").html("All reserved songs has been deleted.");
@@ -220,7 +220,7 @@
         removeSong: function(songID) {
             //run API call to delete the song
             $.ajax({
-                url: "<?= base_url() ?>/select/delete/" + songID,
+                url: "<?= base_url() ?>select/delete/" + songID,
                 success: function(data) {
                     console.log(data);
                 },
@@ -255,10 +255,11 @@
 
         //This method is executed once the youtube player is ready
         onPlayerReady: function(event) {
+
             JKGlobals.speak('The Karaoke Player is now ready');
             //When the player is ready, pull the reserved songs
             $.ajax({
-                url: "<?= base_url() ?>/select/songs",
+                url: "<?= base_url() ?>select/songs",
                 success: function(data) {
                     //store the song list in our global object
                     JKGlobals.reservedSongs = data;
@@ -270,11 +271,33 @@
         //This method is executed once the player state changes (paused, stop, play, etc.)
         onPlayerStateChange: function(event) {
             console.log('Playter state change');
-        }
+        },
+
+        //This method subscribes the browser to our Pusher command-channel
+        commandListener() {
+
+            // Enable pusher logging - don't include this in production
+            Pusher.logToConsole = true;
+
+            let channel = this.pusher.subscribe('command-channel');
+            channel.bind('command-update', function(data) {
+                console.log(JSON.stringify(data));
+            });
+        },
 
         /**
          * END VIDEO PLAYER OBJECTS AND METHODS
          */
 
+
+        /** ----------------------------------------------------------------------------------------------------------------------------------------------- */
+
+        /**
+         * PUSHER INSTANCE
+         * Visit www.pusher.com for more details
+         */
+        pusher: new Pusher('<?= env('PUSHER_APP_KEY'); ?>', {
+                cluster: '<?= env('PUSHER_APP_CLUSTER'); ?>'
+            })
     }
 </script>

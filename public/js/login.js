@@ -29,10 +29,10 @@
                     toastr.success('Logged in successfully.');
                     if (window.mobileCheck()) {
                         //if mobile, redirect to the song selection page
-                        window.location.href = JKGlobals.baseURL + '/select';
+                        window.location.href = JKGlobals.baseURL + 'select';
                     } else {
                         //if not, redirect to the videoke player
-                        window.location.href = JKGlobals.baseURL + '/player';
+                        window.location.href = JKGlobals.baseURL + 'player';
                     }
                 } else {
                     toastr.error('Access code invalid. Please contact IT to get valid access code.');
