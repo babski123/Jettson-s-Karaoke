@@ -66,7 +66,7 @@
                 for (let i = 0; i < songs.length; i++) {
                     html += "<li class='my-2 reserved-song song-" + songs[i].id + "'>" + songs[i].title + "<br>";
                     if (i != 0) {
-                        html += "<a class='badge badge-primary' href='javascript:void(0)'>PRIORITIZE</a>  <a class='badge badge-danger' href='javascript:void(0)' onclick='JKGlobals.deleteSong(" + songs[i].id + ")'>REMOVE</a></li>";
+                        html += "<a class='badge badge-primary' href='javascript:void(0)' onclick='JKGlobals.prioritizeSong(" + songs[i].id + ")'>PRIORITIZE</a>  <a class='badge badge-danger' href='javascript:void(0)' onclick='JKGlobals.deleteSong(" + songs[i].id + ")'>REMOVE</a></li>";
                     }
                 }
                 html += "</ol>"
@@ -103,6 +103,29 @@
                 },
                 error: function() {
                     toastr.error("Failed to remove song.");
+                    document.querySelector(".song-" + songID).classList.add('reserved-song');
+                    document.querySelector(".song-" + songID).classList.remove('removed-song');
+                }
+            });
+        },
+
+        prioritizeSong: function(songID) {
+            document.querySelector(".song-" + songID).classList.remove('reserved-song');
+            document.querySelector(".song-" + songID).classList.add('removed-song');
+            //run API call to prio the song
+            $.ajax({
+                url: "<?= base_url() ?>select/prioritize/" + songID,
+                success: function(data) {
+                    if (data.status == "success") {
+                        toastr.success("Song has been prioritized!");
+                    } else {
+                        toastr.error("Failed to prioritize song.");
+                        document.querySelector(".song-" + songID).classList.add('reserved-song');
+                        document.querySelector(".song-" + songID).classList.remove('removed-song');
+                    }
+                },
+                error: function() {
+                    toastr.error("Failed to prioritize song.");
                     document.querySelector(".song-" + songID).classList.add('reserved-song');
                     document.querySelector(".song-" + songID).classList.remove('removed-song');
                 }
@@ -253,8 +276,6 @@
                 this.player.loadVideoById(this.reservedSongs[0].vid);
                 //play the song
                 this.player.playVideo();
-                //hide splash screen
-                this.hideSplash();
             }
         },
 
@@ -310,13 +331,17 @@
                 //store the songs locally
                 let songs = data.songs;
                 JKGlobals.reservedSongs = songs; //this line syncs the songs list from DB and to our client
-                if(JKGlobals.isStarted == false) {
+                if (JKGlobals.isStarted == false) {
                     JKGlobals.startQueue();
                     JKGlobals.isStarted = true;
+                    //hide splash screen
+                    JKGlobals.hideSplash();
                 }
 
-                if(songs.length == 0) {
+                if (songs.length == 0) {
                     JKGlobals.isStarted = false;
+                    //show splash screen
+                    JKGlobals.showSplash();
                 }
             });
 
@@ -365,6 +390,9 @@
                     case "stop":
                         JKGlobals.player.stopVideo();
                         break;
+                    case "forceplay":
+                        JKGlobals.startQueue();
+                        break;
                 }
             });
         },
@@ -382,6 +410,36 @@
          */
         pusher: new Pusher('<?= env('PUSHER_APP_KEY'); ?>', {
             cluster: '<?= env('PUSHER_APP_CLUSTER'); ?>'
-        })
+        }),
+
+        /** ----------------------------------------------------------------------------------------------------------------------------------------------- */
+
+        /**
+         * FULLSCREEN API
+         */
+        toggleFullScreen: function() {
+            if (!document.fullscreenElement && // alternative standard method
+                !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) { // current working methods
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.mozRequestFullScreen) {
+                    document.documentElement.mozRequestFullScreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+                } else if (document.documentElement.msRequestFullscreen) {
+                    document.documentElement.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+        }
     }
 </script>
