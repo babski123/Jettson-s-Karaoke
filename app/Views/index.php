@@ -29,9 +29,17 @@
     <!-- FOOTER SCRIPTS -->
     <script src="<?= base_url() ?>public/js/detectmobilebrowser.js"></script>
     <script src="<?= base_url() ?>public/js/login.js"></script>
-    <script>
-    </script>
-
+    <?php if ($logged_in) : ?>
+        <script>
+            if (window.mobileCheck()) {
+                //if mobile, redirect to the song selection page
+                window.location.href = JKGlobals.baseURL + 'select';
+            } else {
+                //if not, redirect to the videoke player
+                window.location.href = JKGlobals.baseURL + 'player';
+            }
+        </script>
+    <?php endif; ?>
     <!-- -->
 
 </body>
