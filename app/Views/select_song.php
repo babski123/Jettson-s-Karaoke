@@ -9,7 +9,6 @@
   <script>
     //start streaming reserved songs
     JKGlobals.getReservedSongs();
-
   </script>
   <style>
     body {
@@ -102,12 +101,12 @@
       <div class="col-lg-6 col-md-8 col-sm-10">
         <div class="remote text-center">
           <h2>Jettson's Karaoke</h2>
-
-          <button class="button">Stop</button>
-          <button class="button">Play</button>
-          <button class="button">Pause</button>
-          <button class="button" onclick="JKGlobals.nextVideo()">Next</button>
-          <br>
+          <div id="command-btns">
+            <button class="button" onclick="JKGlobals.executeCommand('stop')">Stop</button>
+            <button class="button" onclick="JKGlobals.executeCommand('play')">Play</button>
+            <button class="button" onclick="JKGlobals.executeCommand('pause')">Pause</button>
+            <button class="button" onclick="JKGlobals.executeCommand('next')">Next</button>
+          </div>
           <a href="<?= base_url() ?>privacy">Privacy Policy</a>
           <div class="search-container my-3 mx-2">
             <input id="search" type="text" class="search-input" placeholder="Find a song">

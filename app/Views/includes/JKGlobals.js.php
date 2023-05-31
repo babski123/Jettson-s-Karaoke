@@ -135,6 +135,29 @@
             });
         },
 
+        //this method emits an event to pusher and sends a data which contains our command
+        executeCommand: function(action) {
+            let btns = document.querySelectorAll("#command-btns .button");
+            btns[0].disabled = true;
+            btns[1].disabled = true;
+            btns[2].disabled = true;
+            btns[3].disabled = true;
+            $.ajax({
+                url: "<?= base_url() ?>control/update/" + action,
+                complete: function(xhr, status) {
+                    if (status == "success") {
+                        toastr.success("Command executed");
+                    } else {
+                        toastr.error("Command failed");
+                    }
+                    btns[0].disabled = false;
+                    btns[1].disabled = false;
+                    btns[2].disabled = false;
+                    btns[3].disabled = false;
+                }
+            });
+        },
+
         /**
          * END REMOTE CONTROLLER OBJECTS AND METHODS
          */
@@ -281,7 +304,22 @@
 
             let channel = this.pusher.subscribe('command-channel');
             channel.bind('command-update', function(data) {
-                console.log(JSON.stringify(data));
+                let cmd = data.command;
+
+                switch (cmd) {
+                    case "next":
+                        JKGlobals.nextVideo();
+                        break;
+                    case "pause":
+                        JKGlobals.player.pauseVideo();
+                        break;
+                    case "play":
+                        JKGlobals.player.playVideo();
+                        break;
+                    case "stop":
+                        JKGlobals.player.stopVideo();
+                        break;
+                }
             });
         },
 
@@ -297,7 +335,7 @@
          * Visit www.pusher.com for more details
          */
         pusher: new Pusher('<?= env('PUSHER_APP_KEY'); ?>', {
-                cluster: '<?= env('PUSHER_APP_CLUSTER'); ?>'
-            })
+            cluster: '<?= env('PUSHER_APP_CLUSTER'); ?>'
+        })
     }
 </script>

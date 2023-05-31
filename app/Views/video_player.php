@@ -85,6 +85,7 @@
 
         function onYouTubeIframeAPIReady() {
             JKGlobals.onYouTubeIframeAPIReady();
+            JKGlobals.commandListener();
         }
     </script>
     <!-- FOOTER SCRIPTS END -->
