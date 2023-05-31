@@ -132,6 +132,7 @@
   </div>
   </div>
   <script src="<?= base_url() ?>public/js/selectSong.js"></script>
+  <?php include("includes/footers.php"); ?>
 </body>
 
 </html>

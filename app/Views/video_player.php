@@ -88,6 +88,7 @@
             JKGlobals.commandListener();
         }
     </script>
+    <?php include("includes/footers.php"); ?>
     <!-- FOOTER SCRIPTS END -->
 
 </body>

@@ -192,6 +192,7 @@
             <li>By email: eleazer.ababa181@gmail.com</li>
         </ul>
     </div>
+    <?php include("includes/footers.php"); ?>
 </body>
 
 </html>

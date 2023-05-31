@@ -11,6 +11,8 @@
     let loginBtn = document.querySelector('.jk-login-btn');
     //select the access code input element
     let inputElement = document.querySelector('#accessCodeInput');
+    //select the start button
+    let startButton = document.querySelector('#startButton');
 
     //handle login functionality
     loginBtn.onclick = function () {
@@ -55,5 +57,18 @@
             }
         });
     }
+
+    
+    //start if already logged in
+    startButton.onclick = function () {
+        if (window.mobileCheck()) {
+            //if mobile, redirect to the song selection page
+            window.location.href = JKGlobals.baseURL + 'select';
+        } else {
+            //if not, redirect to the videoke player
+            window.location.href = JKGlobals.baseURL + 'player';
+        }
+    }
+
 
 })();
