@@ -17,7 +17,10 @@ Clone this repo or download it to your desired project directory
     3. Change `$baseURL` to your base URL
     4. Edit `app/Config/Database.php`
     5. Add your database details
-    6. That's it!
+    6. Create a database
+    7. Locate the `video.sql` file in the root directory and import it to your database
+    8. Create an access code in the `access_codes` table.
+    9. That's it!
 ## Development/Production Modes
 For dev/prod mode, just edit the .env file in the root directory.
 Go to line 17 and comment it out for prod mode, uncomment it for dev mode
