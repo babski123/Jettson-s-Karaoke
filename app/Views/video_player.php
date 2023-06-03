@@ -28,7 +28,7 @@
         }
 
         .jk-title {
-            font-size: 200px;
+            font-size: 250px;
             color: rgb(187 255 255);
             -webkit-text-stroke: 2px #000;
             text-shadow: -5px 7px #23287a;
@@ -69,7 +69,7 @@
     </div>
 
     <div id="jk-title-container" class="jk-title-container">
-        <h1 class="text-center jk-title animate__animated animate__bounceInDown animate__delay-1s">Jettson's<br>Karaoke</h1>
+        <h1 class="text-center jk-title animate__animated animate__bounceInDown animate__delay-1s"><?= config("Settings")->websiteName; ?></h1>
     </div>
 
     <div id="youtube-player">

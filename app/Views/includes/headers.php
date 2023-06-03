@@ -2,7 +2,7 @@
 <title><?= config("Settings")->websiteName; ?></title>
 <meta name="description" content="A web-based Karaoke built using the Youtube API Services">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="shortcut icon" type="image/png" href="public/favicon.ico" />
+<link rel="shortcut icon" type="image/png" href="public/images/favicon/favicon.ico" />
 
 <!-- STYLES -->
 <link rel="stylesheet" href="<?= base_url() ?>public/css/bootstrap4.3.1.css">

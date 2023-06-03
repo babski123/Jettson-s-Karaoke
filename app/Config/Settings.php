@@ -13,5 +13,4 @@ use CodeIgniter\Config\BaseConfig;
 class Settings extends BaseConfig
 {
     public $websiteName = "Jettson's Karaoke";
-    public $password = "4b4b4g4ming";
 }
